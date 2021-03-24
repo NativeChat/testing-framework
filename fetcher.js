@@ -10,13 +10,12 @@ const _fetch = (url, options, retries) => {
         .catch(err => {
             if (err instanceof FetchError || retries < MAX_RETRIES) {
                 return _fetch(url, options, retries + 1);
-            }
-            else {
+            } else {
                 throw err;
             }
         });
 };
 
-module.exports = { 
+module.exports = {
     fetch: (url, options) => _fetch(url, options, 1)
 };

@@ -18,7 +18,7 @@ class TestingFramework {
 
     describe(specs, options) {
         options = options || {};
-        options.rootDescribeName = options.rootDescribeName || "Spec root";
+        options.rootDescribeName = options.rootDescribeName || 'Spec root';
         describe(options.rootDescribeName, () => {
             if (!Array.isArray(specs)) {
                 specs = [specs];
@@ -53,20 +53,19 @@ class TestingFramework {
 
                         if (scenario.parameters) {
                             this._validateParameters(scenario.parameters);
-                            Object.assign(scenario.parameters, parameters);
                         }
 
                         Object.keys(scenario).forEach(key => {
                             switch (key) {
-                                case 'it':
-                                    it(scenario.it, done => that._executeScenario(spec, scenario, done));
-                                    break;
-                                case 'fit':
-                                    fit(scenario.fit, done => that._executeScenario(spec, scenario, done));
-                                    break;
-                                case 'xit':
-                                    xit(scenario.xit, done => that._executeScenario(spec, scenario, done));
-                                    break;
+                            case 'it':
+                                it(scenario.it, done => that._executeScenario(spec, scenario, done));
+                                break;
+                            case 'fit':
+                                fit(scenario.fit, done => that._executeScenario(spec, scenario, done));
+                                break;
+                            case 'xit':
+                                xit(scenario.xit, done => that._executeScenario(spec, scenario, done));
+                                break;
                             }
                         });
                     });
@@ -88,7 +87,7 @@ class TestingFramework {
     _validateParameters(parameters) {
         Object.keys(parameters).forEach(parameter => {
             if (typeof parameters[parameter] !== 'string') {
-                throw Error(`Only string parameters are allowed, the invalid parameter is "${parameter}".`)
+                throw Error(`Only string parameters are allowed, the invalid parameter is "${parameter}".`);
             }
         });
     }
@@ -221,55 +220,55 @@ class TestingFramework {
 
     _verifyResponse(expectedResponse, actualResponse, key) {
         switch (key) {
-            case 'text': {
-                const expectedText = expectedResponse.text;
-                if (Array.isArray(expectedText)) {
-                    return expectedText.includes(actualResponse.text);
-                }
-
-                return expectedText === actualResponse.text;
+        case 'text': {
+            const expectedText = expectedResponse.text;
+            if (Array.isArray(expectedText)) {
+                return expectedText.includes(actualResponse.text);
             }
-            case 'textStartsWith': {
-                const expectedText = expectedResponse.textStartsWith;
 
-                return actualResponse.text.startsWith(expectedText);
-            }
-            case 'textIncludes': {
-                const expectedText = expectedResponse.textIncludes;
-                if (Array.isArray(expectedText)) {
-                    return expectedText.reduce((accumulator, currentValue) => accumulator && actualResponse.text.includes(currentValue));
-                }
+            return expectedText === actualResponse.text;
+        }
+        case 'textStartsWith': {
+            const expectedText = expectedResponse.textStartsWith;
 
-                return actualResponse.text.includes(expectedText);
+            return actualResponse.text.startsWith(expectedText);
+        }
+        case 'textIncludes': {
+            const expectedText = expectedResponse.textIncludes;
+            if (Array.isArray(expectedText)) {
+                return expectedText.reduce((accumulator, currentValue) => accumulator && actualResponse.text.includes(currentValue));
             }
-            case 'template':
-                return this._verify(expectedResponse.template, actualResponse.template, this._verifyTemplate.bind(this));
-            default:
-                return JSON.stringify(expectedResponse[key]) === JSON.stringify(actualResponse[key]);
+
+            return actualResponse.text.includes(expectedText);
+        }
+        case 'template':
+            return this._verify(expectedResponse.template, actualResponse.template, this._verifyTemplate.bind(this));
+        default:
+            return JSON.stringify(expectedResponse[key]) === JSON.stringify(actualResponse[key]);
         }
     }
 
     _verifyTemplate(expectedTemplate, actualTemplate, key) {
         switch (key) {
-            case 'buttons':
-                if (expectedTemplate.buttons.length !== actualTemplate.buttons.length) {
-                    return false;
-                }
+        case 'buttons':
+            if (expectedTemplate.buttons.length !== actualTemplate.buttons.length) {
+                return false;
+            }
 
-                return expectedTemplate.buttons.every((expectedButton, i) =>
-                    this._verify(expectedButton, actualTemplate.buttons[i], this._verifyTemplateButton.bind(this)));
-            default:
-                return JSON.stringify(expectedTemplate[key]) === JSON.stringify(actualTemplate[key]);
-        };
+            return expectedTemplate.buttons.every((expectedButton, i) =>
+                this._verify(expectedButton, actualTemplate.buttons[i], this._verifyTemplateButton.bind(this)));
+        default:
+            return JSON.stringify(expectedTemplate[key]) === JSON.stringify(actualTemplate[key]);
+        }
     }
 
     _verifyTemplateButton(expectedButton, actualButton, key) {
         switch (key) {
-            case 'url':
-                return actualButton.url.startsWith(expectedButton.url);
-            default:
-                return JSON.stringify(expectedButton[key]) === JSON.stringify(actualButton[key]);
-        };
+        case 'url':
+            return actualButton.url.startsWith(expectedButton.url);
+        default:
+            return JSON.stringify(expectedButton[key]) === JSON.stringify(actualButton[key]);
+        }
     }
 
     _formatMessage(message, context) {

@@ -1,10 +1,12 @@
 {
   "name": "darvin-testing-framework",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "A framework for testing Progress NativeChat bots.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint *.js",
+    "security-pack": "tar zcvf darvin-testing-framework.tgz --exclude='./node_modules' --exclude='.git' --exclude='coverage' --exclude='reports' --exclude='.vscode' --exclude='*.tgz' *"
   },
   "repository": {
     "type": "git",
@@ -17,7 +19,7 @@
   },
   "homepage": "https://github.com/darvinai/testing-framework#readme",
   "devDependencies": {
-    "jshint": "2.12.0"
+    "eslint": "7.31.0"
   },
   "dependencies": {
     "bluebird": "3.5.0",

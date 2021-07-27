@@ -5,11 +5,8 @@ on:
 
 jobs:
   release:
-    environment: node-env
+    environment: npm-env
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js
@@ -34,7 +31,7 @@ jobs:
               message=$(git log -1 --pretty=format:%s)
               git tag -a $tag -m "$message";
               git push origin --tags;
-              npm config set '//registry.npmjs.org/:_authToken' '${NPM_TOKEN}'
+              npm config set '//registry.npmjs.org/:_authToken' '${{ secrets.NPM_TOKEN }}'
               npm publish;
 
               echo "::set-output name=tag::$tag"

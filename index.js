@@ -211,7 +211,8 @@ class TestingFramework {
             let isValid = validation(expected, actual, key);
 
             if (!isValid) {
-                throw Error(`FAILED VERIFICATION:\nKEY: ${key}\nEXPECT: ${JSON.stringify(expected)}\nACTUAL: ${JSON.stringify(actual)}`);
+                console.error(`FAILED VERIFICATION:\nKEY: ${key}\nEXPECT: ${JSON.stringify(expected)}\nACTUAL: ${JSON.stringify(actual)}`);
+                return false;
             }
         }
 

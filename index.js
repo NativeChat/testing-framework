@@ -3,7 +3,7 @@
 const Handlebars = require('handlebars');
 const BbPromise = require('bluebird');
 const deepAssign = require('deep-assign');
-const uuid = require('uuid/v4');
+const crypto = require('crypto');
 
 const fetch = require('./fetcher').fetch;
 
@@ -124,7 +124,7 @@ class TestingFramework {
 
     _getSender(sender) {
         const name = sender && sender.name || 'test-user';
-        const id = `${sender && sender.id || name}-${sender && sender.uuid || uuid()}`;
+        const id = `${sender && sender.id || name}-${sender && sender.uuid || crypto.randomUUID()}`;
         return {
             id,
             name

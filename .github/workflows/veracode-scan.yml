@@ -10,35 +10,36 @@ jobs:
     environment: veracode-env
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8
         with:
           node-version: "18.x"
       - run: npm run security-pack
       - name: set vars name
         id: vars
         run: |
-          echo "::set-output name=file_to_upload::$(ls | grep tgz)"
-          echo "::set-output name=veracode_app_name::NChat-NChat-tools-and-libraries"
+          echo "file_to_upload=$(ls | grep tgz)" >> "$GITHUB_OUTPUT"
+          echo "veracode_app_name=NChat-NChat-tools-and-libraries" >> "$GITHUB_OUTPUT"
           full_repo_name=${{ github.repository }}
           repo_name=$(echo ${full_repo_name##*/})
-          echo "::set-output name=repo_name::$repo_name"
+          echo "repo_name=$repo_name" >> "$GITHUB_OUTPUT"
       - name: Set sandbox name
         id: set_sandbox_name
-        run: echo "::set-output name=veracode_sandbox_name::${{ steps.vars.outputs.veracode_app_name }}-${{ steps.vars.outputs.repo_name }}-1.0.0"
+        run: echo "veracode_sandbox_name=${{ steps.vars.outputs.veracode_app_name }}-${{ steps.vars.outputs.repo_name }}-1.0.0" >> "$GITHUB_OUTPUT"
       - name: Set build version
         id: set_build_version
         run: |
           if [ $GITHUB_EVENT_NAME == 'pull_request' ]
           then
-            echo "::set-output name=veracode_build_version::${{ steps.set_sandbox_name.outputs.veracode_sandbox_name }}.PR-${{ github.event.number }}-${{ github.run_number }}-${{ github.run_attempt }}"
+            echo "veracode_build_version=${{ steps.set_sandbox_name.outputs.veracode_sandbox_name }}.PR-${{ github.event.number }}-${{ github.run_number }}-${{ github.run_attempt }}" >> "$GITHUB_OUTPUT"
           else
-            echo "::set-output name=veracode_build_version::${{ steps.set_sandbox_name.outputs.veracode_sandbox_name }}.${{ github.ref_name }}-${{ github.run_number }}-${{ github.run_attempt }}"
+            echo "veracode_build_version=${{ steps.set_sandbox_name.outputs.veracode_sandbox_name }}.${{ github.ref_name }}-${{ github.run_number }}-${{ github.run_attempt }}" >> "$GITHUB_OUTPUT"
           fi
-      - uses: actions/setup-java@v1
+      - uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
         with:
           java-version: "8"
-      - uses: veracode/veracode-uploadandscan-action@master
+          distribution: "zulu"
+      - uses: veracode/veracode-uploadandscan-action@f7e1fbf02c5c899fba9f12e3f537b62f2f1230e1
         with:
           appname: ${{ steps.vars.outputs.veracode_app_name }}
           createprofile: false
